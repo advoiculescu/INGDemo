@@ -6,7 +6,7 @@
   
 
   Esquema del escenario: Solicitud correcta
-	Dado que accedemos a la pagina de ING Direct a traves de un "navegador"
+	Dado que accedemos a la pagina de ING Direct a traves de <navegador>
 	Cuando hacemos click en Hipotecas y Prestamos
 	Entonces aparace un submenu con la opcion Hipoteca Naranja
 	
@@ -30,7 +30,6 @@
 	Y que se ha fijado ya el dinero a necesitar junto a los anhos para pagar
 	Cuando elegimos la hipoteca naranja
 	Entonces se muestra la pagina para contratar la hipoteca Naranja
-	Y cajas de texto para completar los datos del titular
 	
 	Dado que estamos en la página de contratar hipoteca naranja
 	Cuando rellenamos los datos del titular
@@ -60,8 +59,9 @@
 	Cuando se rellenar los datos de la vivienda
 	Entonces se analiza la solicitud
 	Y se obtiene el mensaje de "La Solicitud de su Hipoteca NARANJA es en principio viable."
+	Y cerramos instancia de navegador
 	
 Ejemplos:
 	| navegador |
-	| Chrome |
+#	| Chrome |
 	| Mozilla Firefox   |

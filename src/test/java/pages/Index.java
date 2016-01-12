@@ -11,7 +11,7 @@ public class Index {
 	private ObjectMap map;
 
 	public Index() {
-		map = new ObjectMap("data\\PageObjects\\Home.properties");
+		map = new ObjectMap("data\\PageObjects\\Index.properties");
 	}
 	
 	public String getUrl() {
@@ -31,7 +31,6 @@ public class Index {
 	}
 
 	public void load() {
-		Browser.startDriver();
 		Browser.open(url);
 	}
 
@@ -40,13 +39,28 @@ public class Index {
 	}
 	
 	public void clickHipotecasYPrestamos() throws Exception{
-		System.out.print("Filtrando por nombre...");
+		System.out.print("Click en 'Hipotecas y Préstamos'...");
 		WebElement hipotecasYPrestamos = Browser.driver().findElement(map.getLocator("hipotecasYPrestamos"));
 		hipotecasYPrestamos.click();
 		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
 	}
-
-	public void close() {
-		Browser.close();
+	
+	public boolean verifyHipotecaNaranja() throws Exception{
+		System.out.print("Validamos enlace 'Hipoteca NARANJA'...");
+		WebElement hipotecaNaranja = Browser.driver().findElement(map.getLocator("hipotecaNARANJA"));
+		if (hipotecaNaranja.isDisplayed()){
+			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+			return true;
+		} else {
+			System.out.println("\u001B[31m" + " ERROR" + "\u001B[0m");
+			return false;
+		}	
+	}
+	
+	public void clickHipotecaNaranja() throws Exception{
+		System.out.print("Click en 'Hipoteca NARANJA'...");
+		WebElement hipotecaNaranja = Browser.driver().findElement(map.getLocator("hipotecaNARANJA"));
+		hipotecaNaranja.click();
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
 	}
 }

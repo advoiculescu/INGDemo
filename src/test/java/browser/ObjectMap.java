@@ -45,7 +45,7 @@ public class ObjectMap {
 		else if (locatorType.toLowerCase().equals("xpath"))
 			return By.xpath(locatorValue);
 		else
-			throw new Exception("Locator type '" + locatorType + "' notdefined!!");
+			throw new Exception("Locator type '" + locatorType + "' not defined!!");
 	}
 	
 	public String getLocatorType(String logicalElementName) throws Exception {
