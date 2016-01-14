@@ -41,7 +41,8 @@ public class Simulador {
 		Browser.open(url);
 	}
 
-	public void isLoaded() {
+	public void isLoaded() throws InterruptedException {
+		Thread.sleep(2000);
 		assertTrue(Browser.driver().getTitle().equals(title));
 	}
 	
@@ -61,9 +62,16 @@ public class Simulador {
 	public void clickRadioClienteNo() throws Exception{
 		System.out.print("Click en 'No' (¿Ya eres cliente de ING DIRECT?)...");
 		Browser.driver().switchTo().frame("transactional");
-		WebElement radioClienteNo = Browser.driver().findElement(map.getLocator("radioClienteNo"));
-		WebDriverWait wait = new WebDriverWait(Browser.driver(), 10);
-		wait.until(ExpectedConditions.presenceOfElementLocated(map.getLocator("radioClienteNo")));
+		WebElement radioClienteNo = (new WebDriverWait(Browser.driver(), 10))
+			    .until(new ExpectedCondition<WebElement>(){
+			        public WebElement apply(WebDriver d) {
+							try {
+								return d.findElement(map.getLocator("radioClienteNo"));
+							} catch (Exception e) {
+								e.printStackTrace();
+								return null;
+							}				
+					}});
 		((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);", radioClienteNo);
 		Thread.sleep(500);
 		radioClienteNo.click();

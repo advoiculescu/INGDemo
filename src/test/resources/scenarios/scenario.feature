@@ -34,28 +34,28 @@
 	Dado que estamos en la página de contratar hipoteca naranja
 	Cuando rellenamos los datos del titular
 	Y pulsamos el botón de continuar
-	Entonces se accede a los datos personales del titular
+	Entonces se accede a formulario de datos personales del titular
 	
-	Dado que estamos en la página de relleno de los datos del titular
-	Y se está en el paso 1 de 4
+	Dado se está en el paso 1 de 4
+	Y que se tienen en pantalla los campos de datos personales del titular
 	Cuando rellenamos todas las cajas de texto sobre los datos personales
-	Y pulsamos el botón de continuar
+	Y pulsamos el botón de continuar a los datos de contacto
 	Entonces la página se desplaza hacia abajo y muestra los datos de contacto
 	
-	Dado que se tienen en pantalla los campos de datos de contacto
-	Y se está en el paso 2 de 4
+	Dado se está en el paso 2 de 4
+	Y que se tienen en pantalla los campos de datos de contacto
 	Cuando se rellenan todas las cajas obligatorias con los datos del contacto
 	Y se pulsa el botón de continuar
 	Entonces se muestra la información sobre los datos económicos
 	
-	Dado que se ven los datos económicos
-	Y se está en el paso 3 de 4
-	Cuando se rellenar estos datos economicos 
+	Dado se está en el paso 3 de 4
+	Y que se tienen en pantalla los campos de datos económicos
+	Cuando rellenamos todos los datos economicos 
 	Y se pulsa el botón de continuar tras introducir datos económicos
 	Entonces se desplaza la pantalla hacia abajo mostrando los datos de la vivienda a hipotecar
 	
-	Dado que se está en la pantalla de datos de la vivienda
-	Y se está en el paso 4 de 4
+	Dado se está en el paso 4 de 4
+	Y que se está en la pantalla de datos de la vivienda
 	Cuando se rellenar los datos de la vivienda
 	Entonces se analiza la solicitud
 	Y se obtiene el mensaje de "La Solicitud de su Hipoteca NARANJA es en principio viable."

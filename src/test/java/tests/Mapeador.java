@@ -7,19 +7,29 @@ import cucumber.api.java.Before;
 import cucumber.api.java.es.*;
 import pages.Index;
 import pages.Simulador;
+import pages.SolicitudHipoteca;
 
 import static org.junit.Assert.*;
 
-public class Ejecutor {
-	
+import java.util.ArrayList;
+import java.util.Set;
+
+import org.openqa.selenium.NoSuchWindowException;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.firefox.FirefoxDriver;
+
+public class Mapeador {
+
 	Index index;
 	Simulador simulador;
-	
+	SolicitudHipoteca solicitud;
+
 	@Before
-	public void setUp(){
-		System.out.println("\t\t--------------------------------------------INICIO DEL TEST--------------------------------------------");
-	}	
-	
+	public void setUp() {
+		System.out.println(
+				"\t\t--------------------------------------------INICIO DEL TEST--------------------------------------------");
+	}
+
 	@Dado("^que accedemos a la pagina de ING Direct a traves de Chrome$")
 	public void que_accedemos_a_la_pagina_de_ING_Direct_a_traves_de_Chrome() throws Throwable {
 		Browser.startDriver("Chrome");
@@ -35,7 +45,7 @@ public class Ejecutor {
 		index.load();
 		index.isLoaded();
 	}
-	
+
 	@Cuando("^hacemos click en Hipotecas y Prestamos$")
 	public void hacemos_click_en_Hipotecas_y_Prestamos() throws Throwable {
 		index.clickHipotecasYPrestamos();
@@ -43,7 +53,7 @@ public class Ejecutor {
 
 	@Entonces("^aparace un submenu con la opcion Hipoteca Naranja$")
 	public void aparace_un_submenu_con_la_opcion_Hipoteca_Naranja() throws Throwable {
-		assertTrue(index.verifyHipotecaNaranja());	
+		assertTrue(index.verifyHipotecaNaranja());
 	}
 
 	@Dado("^que el submenu con la opcion Hipoteca Naranja esta visible$")
@@ -69,7 +79,7 @@ public class Ejecutor {
 
 	@Cuando("^introducimos datos del cliente en el simulador$")
 	public void introducimos_datos_del_cliente_en_el_simulador() throws Throwable {
-		//simulador.clickRadioClienteSi(); // cliente de ing: SI/NO
+		// simulador.clickRadioClienteSi(); // cliente de ing: SI/NO
 		simulador.clickRadioClienteNo();
 		// titulares: uno/dos+
 		simulador.setIngresosMensuales(3000); // ingresos mensuales
@@ -79,7 +89,7 @@ public class Ejecutor {
 
 	@Cuando("^hacemos click en Comenzar a Simular$")
 	public void hacemos_click_en_Comenzar_a_Simular() throws Throwable {
-	    simulador.clickComienzaASimular();
+		simulador.clickComienzaASimular();
 	}
 
 	@Entonces("^el cuadro '¿Cual es la finalidad de la hipoteca\\?' cargara$")
@@ -93,16 +103,17 @@ public class Ejecutor {
 	}
 
 	/* COMPRAR UNA VIVIENDA / CAMBIAR MI HIPOTECA / HIPOTECAR MI CASA */
-	
+
 	@Cuando("^rellenamos los datos obligatorios del cuadro 'Comprar una vivienda'$")
 	public void rellenamos_los_datos_obligatorios_del_cuadro_Comprar_una_vivienda() throws Throwable {
-		simulador.setValorViviendaAHipotecar(80000);// Primera / Segunda vivienda
+		simulador.setValorViviendaAHipotecar(80000);// Primera / Segunda
+													// vivienda
 		// Introducimos importe
 	}
 
 	@Cuando("^hacemos click en continuar$")
 	public void hacemos_click_en_continuar() throws Throwable {
-	    simulador.clickContinuar();
+		simulador.clickContinuar();
 	}
 
 	@Entonces("^un cuadro con el resultado de la simulación aparece$")
@@ -122,147 +133,209 @@ public class Ejecutor {
 
 	@Dado("^que se ha fijado ya el dinero a necesitar junto a los anhos para pagar$")
 	public void que_se_ha_fijado_ya_el_dinero_a_necesitar_junto_a_los_anhos_para_pagar() throws Throwable {
-	    // TODO
+		// TODO
 	}
 
 	@Cuando("^elegimos la hipoteca naranja$")
 	public void elegimos_la_hipoteca_naranja() throws Throwable {
-	    simulador.clickHipotecaNaranja();
+		simulador.clickHipotecaNaranja();
 	}
 
 	@Entonces("^se muestra la pagina para contratar la hipoteca Naranja$")
 	public void se_muestra_la_pagina_para_contratar_la_hipoteca_Naranja() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+
+		solicitud = new SolicitudHipoteca();
+
+		Set<String> allWindows = Browser.driver().getWindowHandles();
+
+		System.out.println("EL NÚMERO DE VENTANAS ES:" + allWindows.size());
+		
+		if (Browser.driver() instanceof FirefoxDriver){
+			if (!allWindows.isEmpty()) {
+				for (String windowId : allWindows) {
+					try {
+						Browser.driver().switchTo().window(windowId).getTitle().equals(solicitud.getTitle());
+					} catch (NoSuchWindowException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		} else if (Browser.driver() instanceof ChromeDriver){
+			 ArrayList<String> allTabs = new ArrayList<String> (Browser.driver().getWindowHandles());
+			 System.out.println("NUMERO DE TABS: "+allTabs.size());
+				if (!allTabs.isEmpty()) {
+					for (String tabId : allTabs) {
+						try {
+							//Browser.driver().switchTo().window(windowId).getTitle().equals(solicitud.getTitle());
+							Browser.driver().switchTo().window(tabId).getTitle().equals(solicitud.getTitle());
+						} catch (NoSuchWindowException e) {
+							e.printStackTrace();
+						}
+					}
+				}
+		}
+
+		System.out.println("EL TÍTULO DE LA PÁGINA ES: " + Browser.driver().getTitle());
+		// No tiene título
+
+		solicitud.isLoaded();
 	}
 
 	@Dado("^que estamos en la página de contratar hipoteca naranja$")
 	public void que_estamos_en_la_página_de_contratar_hipoteca_naranja() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.isLoaded();
 	}
 
 	@Cuando("^rellenamos los datos del titular$")
 	public void rellenamos_los_datos_del_titular() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.setDiaNacimiento(23); // día
+		solicitud.setMesNacimiento(04); // mes
+		solicitud.setAñoNacimiento(1977);// año
+		// nie/nif
+		solicitud.setNumeroIdentificación("14309663Y"); // nr identificación
+		solicitud.clickEliminarSegundoTitular();// eliminar segundo titular
 	}
 
 	@Cuando("^pulsamos el botón de continuar$")
 	public void pulsamos_el_botón_de_continuar() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.clickScrollAbajo();
+		solicitud.clickContinuar1();
 	}
 
-	@Entonces("^se accede a los datos personales del titular$")
+	@Entonces("^se accede a formulario de datos personales del titular$")
 	public void se_accede_a_los_datos_personales_del_titular() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		assertTrue(solicitud.verifyPaso1de4());
 	}
 
-	@Dado("^que estamos en la página de relleno de los datos del titular$")
+	@Dado("^que estamos en la página con formulario de datos personales del titular$")
 	public void que_estamos_en_la_página_de_relleno_de_los_datos_del_titular() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.isLoaded();
 	}
 
 	@Dado("^se está en el paso (\\d+) de (\\d+)$")
 	public void se_está_en_el_paso_de(int arg1, int arg2) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		if (arg1 == 1) {
+			assertTrue(solicitud.verifyPaso1de4());
+		} else if (arg1 == 2) {
+			assertTrue(solicitud.verifyPaso2de4());
+		} else if (arg1 == 3) {
+			assertTrue(solicitud.verifyPaso3de4());
+		} else if (arg1 == 4) {
+			//assertTrue(solicitud.verifyPaso4de4());
+		}
+	}
+	
+	@Dado("^que se tienen en pantalla los campos de datos personales del titular$")
+	public void que_se_tienen_en_pantalla_los_campos_de_datos_personales_del_titular() throws Throwable {
+		assertTrue("Verificamos que el primer campo existe y está activo.",solicitud.verifyCampoNombre());
 	}
 
 	@Cuando("^rellenamos todas las cajas de texto sobre los datos personales$")
 	public void rellenamos_todas_las_cajas_de_texto_sobre_los_datos_personales() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.clickSexoMasculino(); // sexo: hombre/mujer
+		solicitud.setNombre("Juan");// nombre
+		solicitud.setPrimerApellido("Domínguez");// 1er apellido
+		solicitud.setSegundoApellido("Jiménez");// 2do apellido
+		solicitud.setResidenciaFiscal("españa");// residencia fiscal
+		// paisNacimiento
+		// nacionalidad
+		// 2da nacionalidad
+	}
+
+	@Cuando("^pulsamos el botón de continuar a los datos de contacto$")
+	public void pulsamos_el_botón_de_continuar_a_los_datos_de_contacto() throws Throwable {
+		solicitud.clickContinuar2();
 	}
 
 	@Entonces("^la página se desplaza hacia abajo y muestra los datos de contacto$")
 	public void la_página_se_desplaza_hacia_abajo_y_muestra_los_datos_de_contacto() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// TODO
 	}
 
 	@Dado("^que se tienen en pantalla los campos de datos de contacto$")
 	public void que_se_tienen_en_pantalla_los_campos_de_datos_de_contacto() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		assertTrue("Verificamos que el primer campo existe y esta activo.",solicitud.verifyDireccion());
 	}
 
 	@Cuando("^se rellenan todas las cajas obligatorias con los datos del contacto$")
 	public void se_rellenan_todas_las_cajas_obligatorias_con_los_datos_del_contacto() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// tipo de vía
+		solicitud.setDireccion("Roma");   // dirección
+		solicitud.setNumero("77"); // número
+		// piso/puerta TODO
+		// Urbanización / polígonos
+		solicitud.setLocalidad("Parla");// localidad
+		solicitud.setProvincia("madrid");// provincia
+		solicitud.setCodigoPostal(28880);// CP
+		solicitud.setEmail("emaildeprueba@gmail.com");// e-mail
+		solicitud.setTelefonoMovil(654596678);// telefono movil
+		// otro telefono
 	}
 
 	@Cuando("^se pulsa el botón de continuar$")
 	public void se_pulsa_el_botón_de_continuar() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.clickContinuar3();
 	}
 
 	@Entonces("^se muestra la información sobre los datos económicos$")
 	public void se_muestra_la_información_sobre_los_datos_económicos() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// TODO
 	}
 
-	@Dado("^que se ven los datos económicos$")
-	public void que_se_ven_los_datos_económicos() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	@Dado("^que se tienen en pantalla los campos de datos económicos$")
+	public void que_se_tienen_en_pantalla_los_campos_de_datos_económicos() throws Throwable {
+	    assertTrue("Verificamos que el primer campo existe y está activo.",solicitud.verifyTamañoUnidadFamiliar());
 	}
-
-	@Cuando("^se rellenar estos datos economicos$")
-	public void se_rellenar_estos_datos_economicos() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+	
+	@Cuando("^rellenamos todos los datos economicos$")
+	public void rellenamos_todos_los_datos_economicos() throws Throwable {
+		solicitud.setTamañoUnidadFamiliar(3);
+		solicitud.setEstadoCivil("soltero");
+		solicitud.setTipoContrato("fijo");
 	}
 
 	@Cuando("^se pulsa el botón de continuar tras introducir datos económicos$")
 	public void se_pulsa_el_botón_de_continuar_tras_introducir_datos_económicos() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		solicitud.clickContinuar4();
 	}
 
 	@Entonces("^se desplaza la pantalla hacia abajo mostrando los datos de la vivienda a hipotecar$")
 	public void se_desplaza_la_pantalla_hacia_abajo_mostrando_los_datos_de_la_vivienda_a_hipotecar() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		//TODO
 	}
 
 	@Dado("^que se está en la pantalla de datos de la vivienda$")
 	public void que_se_está_en_la_pantalla_de_datos_de_la_vivienda() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// Write code here that turns the phrase above into concrete actions
+		throw new PendingException();
 	}
 
 	@Cuando("^se rellenar los datos de la vivienda$")
 	public void se_rellenar_los_datos_de_la_vivienda() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// Write code here that turns the phrase above into concrete actions
+		throw new PendingException();
 	}
 
 	@Entonces("^se analiza la solicitud$")
 	public void se_analiza_la_solicitud() throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// Write code here that turns the phrase above into concrete actions
+		throw new PendingException();
 	}
 
 	@Entonces("^se obtiene el mensaje de \"([^\"]*)\"$")
 	public void se_obtiene_el_mensaje_de(String arg1) throws Throwable {
-	    // Write code here that turns the phrase above into concrete actions
-	    throw new PendingException();
+		// Write code here that turns the phrase above into concrete actions
+		throw new PendingException();
 	}
-	
+
 	@Entonces("^cerramos instancia de navegador$")
 	public void cerramos_instancia_de_navegador() throws Throwable {
-	    Browser.close();
+		Browser.close();
 	}
-	
+
 	@After
-	public void tearDown(){
-		System.out.println("\t\t--------------------------------------------FIN DEL TEST--------------------------------------------");
+	public void tearDown() {
+		System.out.println(
+				"\t\t--------------------------------------------FIN DEL TEST--------------------------------------------");
 	}
 }

@@ -6,6 +6,8 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.firefox.FirefoxProfile;
+import org.openqa.selenium.firefox.internal.ProfilesIni;
 
 public class Browser {
 	private static WebDriver driver;
@@ -13,7 +15,9 @@ public class Browser {
 	public static void startDriver(String driverType) {
 		System.out.print("Arrancando "+driverType+"...");
 		if (driverType.equals("") || driverType.equals("Mozilla Firefox")) {
-			driver = new FirefoxDriver();
+			ProfilesIni profile = new ProfilesIni();
+			FirefoxProfile ffprofile = profile.getProfile("default");
+			driver = new FirefoxDriver(ffprofile);
 		} else if (driverType.equals("Chrome")){
 			System.setProperty("webdriver.chrome.driver", "drivers\\chromedriver.exe");
 			driver = new ChromeDriver();
