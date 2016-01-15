@@ -1,7 +1,6 @@
 package tests;
 
 import browser.Browser;
-import cucumber.api.PendingException;
 import cucumber.api.java.After;
 import cucumber.api.java.Before;
 import cucumber.api.java.es.*;
@@ -82,9 +81,9 @@ public class Mapeador {
 		// simulador.clickRadioClienteSi(); // cliente de ing: SI/NO
 		simulador.clickRadioClienteNo();
 		// titulares: uno/dos+
-		simulador.setIngresosMensuales(3000); // ingresos mensuales
+		simulador.setIngresosMensuales(3500); // ingresos mensuales
 		simulador.setGastosMensuales(0);// gastos de otros préstamos
-		simulador.setEdadMayorTitular(55);// edad del mayor titular
+		simulador.setEdadMayorTitular(53);// edad del mayor titular
 	}
 
 	@Cuando("^hacemos click en Comenzar a Simular$")
@@ -106,7 +105,7 @@ public class Mapeador {
 
 	@Cuando("^rellenamos los datos obligatorios del cuadro 'Comprar una vivienda'$")
 	public void rellenamos_los_datos_obligatorios_del_cuadro_Comprar_una_vivienda() throws Throwable {
-		simulador.setValorViviendaAHipotecar(80000);// Primera / Segunda
+		simulador.setValorViviendaAHipotecar(82000);// Primera / Segunda
 													// vivienda
 		// Introducimos importe
 	}
@@ -161,8 +160,9 @@ public class Mapeador {
 				}
 			}
 		} else if (Browser.driver() instanceof ChromeDriver){
+			Thread.sleep(2000);
 			 ArrayList<String> allTabs = new ArrayList<String> (Browser.driver().getWindowHandles());
-			 System.out.println("NUMERO DE TABS: "+allTabs.size());
+			 System.out.println("NUMERO DE PESTAÑAS: "+allTabs.size());
 				if (!allTabs.isEmpty()) {
 					for (String tabId : allTabs) {
 						try {
@@ -188,11 +188,11 @@ public class Mapeador {
 
 	@Cuando("^rellenamos los datos del titular$")
 	public void rellenamos_los_datos_del_titular() throws Throwable {
-		solicitud.setDiaNacimiento(23); // día
-		solicitud.setMesNacimiento(04); // mes
+		solicitud.setDiaNacimiento(24); // día
+		solicitud.setMesNacimiento(8); // mes
 		solicitud.setAñoNacimiento(1977);// año
 		// nie/nif
-		solicitud.setNumeroIdentificación("14309663Y"); // nr identificación
+		solicitud.setNumeroIdentificación("27307775J"); // nr identificación (nif)
 		solicitud.clickEliminarSegundoTitular();// eliminar segundo titular
 	}
 
@@ -221,7 +221,7 @@ public class Mapeador {
 		} else if (arg1 == 3) {
 			assertTrue(solicitud.verifyPaso3de4());
 		} else if (arg1 == 4) {
-			//assertTrue(solicitud.verifyPaso4de4());
+			assertTrue(solicitud.verifyPaso4de4());
 		}
 	}
 	
@@ -233,9 +233,9 @@ public class Mapeador {
 	@Cuando("^rellenamos todas las cajas de texto sobre los datos personales$")
 	public void rellenamos_todas_las_cajas_de_texto_sobre_los_datos_personales() throws Throwable {
 		solicitud.clickSexoMasculino(); // sexo: hombre/mujer
-		solicitud.setNombre("Juan");// nombre
-		solicitud.setPrimerApellido("Domínguez");// 1er apellido
-		solicitud.setSegundoApellido("Jiménez");// 2do apellido
+		solicitud.setNombre("Pedro");// nombre
+		solicitud.setPrimerApellido("López");// 1er apellido
+		solicitud.setSegundoApellido("López");// 2do apellido
 		solicitud.setResidenciaFiscal("españa");// residencia fiscal
 		// paisNacimiento
 		// nacionalidad
@@ -260,15 +260,15 @@ public class Mapeador {
 	@Cuando("^se rellenan todas las cajas obligatorias con los datos del contacto$")
 	public void se_rellenan_todas_las_cajas_obligatorias_con_los_datos_del_contacto() throws Throwable {
 		// tipo de vía
-		solicitud.setDireccion("Roma");   // dirección
-		solicitud.setNumero("77"); // número
+		solicitud.setDireccion("Paris");   // dirección
+		solicitud.setNumero("3"); // número
 		// piso/puerta TODO
 		// Urbanización / polígonos
-		solicitud.setLocalidad("Parla");// localidad
+		solicitud.setLocalidad("Velilla");// localidad
 		solicitud.setProvincia("madrid");// provincia
-		solicitud.setCodigoPostal(28880);// CP
-		solicitud.setEmail("emaildeprueba@gmail.com");// e-mail
-		solicitud.setTelefonoMovil(654596678);// telefono movil
+		solicitud.setCodigoPostal(28830);// CP
+		solicitud.setEmail("testmail5@hotmail.com");// e-mail
+		solicitud.setTelefonoMovil(611236678);// telefono movil
 		// otro telefono
 	}
 
@@ -291,7 +291,11 @@ public class Mapeador {
 	public void rellenamos_todos_los_datos_economicos() throws Throwable {
 		solicitud.setTamañoUnidadFamiliar(3);
 		solicitud.setEstadoCivil("soltero");
-		solicitud.setTipoContrato("fijo");
+		solicitud.setTipoContrato("otros");
+		solicitud.setIngresosMensuales(20000);
+		solicitud.setNumeroPagas(14);
+		solicitud.setTipoActividad("estudiante");
+		
 	}
 
 	@Cuando("^se pulsa el botón de continuar tras introducir datos económicos$")
@@ -304,28 +308,37 @@ public class Mapeador {
 		//TODO
 	}
 
-	@Dado("^que se está en la pantalla de datos de la vivienda$")
+	@Dado("^que se tienen en pantalla los datos de la vivienda a hipotecar$")
 	public void que_se_está_en_la_pantalla_de_datos_de_la_vivienda() throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		throw new PendingException();
+		solicitud.verifyLocalidadVivienda();
 	}
 
-	@Cuando("^se rellenar los datos de la vivienda$")
+	@Cuando("^se rellenan los datos de la vivienda$")
 	public void se_rellenar_los_datos_de_la_vivienda() throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		throw new PendingException();
+		solicitud.setNumeroInmueblesAHipotecar("vivienda");
+		solicitud.setTipoVivienda("piso");
+		solicitud.setEstadoVivienda("usada");
+		solicitud.setLocalidadVivienda("Pinto");
+		solicitud.setProvinciaVivienda("madrid");
+		solicitud.setMetrosConstruidos(144);
+		solicitud.setCodigoPostalVivienda(28320); // orden cambiado para sincronizar
+		solicitud.setMesPrevistoFirma(6);
+		solicitud.setAñoPrevistoFirma(2016);
+	}
+	
+	@Cuando("^se pulsa el botón de continuar tras introducir datos de la vivienda$")
+	public void se_pulsa_el_botón_de_continuar_tras_introducir_datos_de_la_vivienda() throws Throwable {
+		solicitud.clickContinuar5();
 	}
 
 	@Entonces("^se analiza la solicitud$")
 	public void se_analiza_la_solicitud() throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		throw new PendingException();
+		assertTrue(solicitud.verifyAnalizandoSolicitud());
 	}
 
 	@Entonces("^se obtiene el mensaje de \"([^\"]*)\"$")
 	public void se_obtiene_el_mensaje_de(String arg1) throws Throwable {
-		// Write code here that turns the phrase above into concrete actions
-		throw new PendingException();
+		assertEquals("Lo sentimos, su solicitud de hipoteca no es viable", solicitud.getMensajeSolicitudDenegada());
 	}
 
 	@Entonces("^cerramos instancia de navegador$")

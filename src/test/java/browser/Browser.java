@@ -18,6 +18,7 @@ public class Browser {
 			ProfilesIni profile = new ProfilesIni();
 			FirefoxProfile ffprofile = profile.getProfile("default");
 			driver = new FirefoxDriver(ffprofile);
+		//	driver = new FirefoxDriver();
 		} else if (driverType.equals("Chrome")){
 			System.setProperty("webdriver.chrome.driver", "drivers\\chromedriver.exe");
 			driver = new ChromeDriver();
@@ -39,6 +40,7 @@ public class Browser {
 	}
 
 	public static void close() {
-		driver.close();
+		//driver.close();
+		driver.quit();
 	}
 }

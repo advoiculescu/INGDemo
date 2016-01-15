@@ -15,6 +15,7 @@ import browser.*;
 public class SolicitudHipoteca {
 	private String url = "https://ing.ingdirect.es/signups_lending/#prospect-mortgage-request";
 	private String title = "";
+	private String titleChrome = "https://ing.ingdirect.es/signups_lending/#prospect-mortgage-request";
 	private ObjectMap map;
 
 	public SolicitudHipoteca() {
@@ -49,7 +50,7 @@ public class SolicitudHipoteca {
 
 		} else if(Browser.driver() instanceof ChromeDriver){
 			System.out.println("ES UN CHROMEDRIVER");
-			assertTrue(Browser.driver().getTitle().equals(title));
+			assertTrue(Browser.driver().getTitle().equals(titleChrome));
 		}
 		//assertTrue(Browser.driver().getTitle().equals(title));
 	}
@@ -237,6 +238,28 @@ public class SolicitudHipoteca {
 			System.out.println("\u001B[31m" + " ERROR" + "\u001B[0m");
 		}
 	}
+	
+	public void clickContinuar5() throws Exception {
+		System.out.print("Click en 'Continuar'...");
+		WebElement continuar5 = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+			public WebElement apply(WebDriver d) {
+				try {
+					return d.findElement(map.getLocator("continuar5"));
+				} catch (Exception e) {
+					e.printStackTrace();
+					return null;
+				}
+			}
+		});
+		((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);", continuar5);
+		Thread.sleep(500);
+		if (continuar5.isEnabled() && continuar5.isDisplayed()) {
+			continuar5.click();
+			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+		} else {
+			System.out.println("\u001B[31m" + " ERROR" + "\u001B[0m");
+		}
+	}
 
 	public boolean verifyPaso1de4() throws Exception {
 		System.out.print("Validamos el texto 'Datos personales'...");
@@ -311,6 +334,33 @@ public class SolicitudHipoteca {
 					}
 				});
 		if (tituloDatosEconomicos.isDisplayed()) {
+			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+			return true;
+		} else {
+			System.out.println("\u001B[31m" + " ERROR" + "\u001B[0m");
+			return false;
+		}
+	}
+	
+	public boolean verifyPaso4de4() throws Exception {
+		System.out.print("Validamos el texto 'Datos de la vivienda a hipotecar'...");
+		WebElement tituloDatosVivienda = (new WebDriverWait(Browser.driver(), 15))
+				.until(new ExpectedCondition<WebElement>() {
+					public WebElement apply(WebDriver d) {
+						try {
+							if (d.findElement(map.getLocator("tituloDatosVivienda")).getText()
+									.equals("Datos de la vivienda a hipotecar")) {
+								return d.findElement(map.getLocator("tituloDatosVivienda"));
+							} else {
+								return null;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				});
+		if (tituloDatosVivienda.isDisplayed()) {
 			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
 			return true;
 		} else {
@@ -593,7 +643,8 @@ public class SolicitudHipoteca {
 					}
 				}
 			});
-			estadoCivilSoltero.click();
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", estadoCivilSoltero);
+			//estadoCivilSoltero.click();
 		} else {
 			fail("el método setEstadoCivil no acepta el estado proporcionado, por favor implementelo");
 		}
@@ -606,23 +657,291 @@ public class SolicitudHipoteca {
 		listaTipoContrato.click();
 		Thread.sleep(500);
 		
-		if (tipoContrato.equalsIgnoreCase("fijo")) {
-			WebElement tipoContratoFijo = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+		if (tipoContrato.equalsIgnoreCase("otros")) {
+			WebElement tipoContratoOtros = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
 				public WebElement apply(WebDriver d) {
 					try {
-						return d.findElement(map.getLocator("tipoContratoFijo"));
+						return d.findElement(map.getLocator("tipoContratoOtros"));
 					} catch (Exception e) {
 						e.printStackTrace();
 						return null;
 					}
 				}
 			});
-			tipoContratoFijo.click();
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);",
+					tipoContratoOtros);
+			Thread.sleep(500);
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", tipoContratoOtros);
+			//tipoContratoOtros.click();
 		} else {
 			fail("el método setTipoContrato no acepta el tipo de contrato proporcionado, por favor implementelo");
 		}
 		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
 	}
 	
+	public void setIngresosMensuales(int euros) throws Exception {
+		System.out.print("Introduciendo " + euros + " en Ingresos Mensuales...");
+		WebElement textfieldIngresosMensuales = Browser.driver().findElement(map.getLocator("textfieldIngresosMensuales"));
+		textfieldIngresosMensuales.sendKeys(Integer.toString(euros));
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
 	
+	public void setNumeroPagas(int numPagas) throws Exception {
+		System.out.print("Introduciendo " + numPagas + " en Numero de Pagas...");
+		WebElement textfieldNumeroPagas = Browser.driver().findElement(map.getLocator("textfieldNumeroPagas"));
+		textfieldNumeroPagas.sendKeys(Integer.toString(numPagas));
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setTipoActividad(String tipoActividad) throws Exception {
+		System.out.print("Introduciendo " + tipoActividad + " en Tipo de Contrato...");
+		WebElement listaTipoActividad = Browser.driver().findElement(map.getLocator("listaTipoActividad"));
+		listaTipoActividad.click();
+		Thread.sleep(500);
+		
+		if (tipoActividad.equalsIgnoreCase("estudiante")) {
+			WebElement tipoActividadEstudiante = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+				public WebElement apply(WebDriver d) {
+					try {
+						return d.findElement(map.getLocator("tipoActividadEstudiante"));
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);",
+					tipoActividadEstudiante);
+			Thread.sleep(500);
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", tipoActividadEstudiante);
+			//tipoActividadEstudiante.click();
+		} else {
+			fail("el método setTipoActividad no acepta el tipo de actividad proporcionado, por favor implementelo");
+		}
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public boolean verifyLocalidadVivienda() throws Exception {
+		System.out.print("Validamos carga del campo 'Localidad'...");
+		WebElement textfieldLocalidadVivienda = (new WebDriverWait(Browser.driver(), 10))
+				.until(new ExpectedCondition<WebElement>() {
+					public WebElement apply(WebDriver d) {
+						try {
+							if (d.findElement(map.getLocator("textfieldLocalidadVivienda")).isDisplayed()){
+								return d.findElement(map.getLocator("textfieldLocalidadVivienda"));
+							} else {
+								return null;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				});
+		if (textfieldLocalidadVivienda.isEnabled()) {
+			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+			return true;
+		} else {
+			System.out.println("\u001B[31m" + " ERROR" + "\u001B[0m");
+			return false;
+		}
+	}
+	
+	public void setNumeroInmueblesAHipotecar(String inmuebles) throws Exception {
+		System.out.print("Introduciendo " + inmuebles + " en Nº Inmuebles a Hipotecar...");
+		WebElement listaNumeroInmueblesAHipotecar = Browser.driver().findElement(map.getLocator("listaNumeroInmueblesAHipotecar"));
+		listaNumeroInmueblesAHipotecar.click();
+		Thread.sleep(500);
+		
+		if (inmuebles.equalsIgnoreCase("vivienda")) {
+			WebElement inmuebleSoloVivienda = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+				public WebElement apply(WebDriver d) {
+					try {
+						return d.findElement(map.getLocator("inmuebleSoloVivienda"));
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);",
+					inmuebleSoloVivienda);
+			Thread.sleep(500);
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", inmuebleSoloVivienda);
+			//inmuebleSoloVivienda.click();
+		} else {
+			fail("el método setNumeroInmueblesAHipotecar no acepta el numero de inmuebles proporcionado, por favor implementelo");
+		}
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setTipoVivienda(String tipoVivienda) throws Exception {
+		System.out.print("Introduciendo " + tipoVivienda + " en Tipo de Vivienda...");
+		WebElement listaTipoVivienda = Browser.driver().findElement(map.getLocator("listaTipoVivienda"));
+		listaTipoVivienda.click();
+		Thread.sleep(500);
+		
+		if (tipoVivienda.equalsIgnoreCase("piso")) {
+			WebElement tipoViviendaPiso = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+				public WebElement apply(WebDriver d) {
+					try {
+						return d.findElement(map.getLocator("tipoViviendaPiso"));
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);",
+					tipoViviendaPiso);
+			Thread.sleep(500);
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", tipoViviendaPiso);
+			//tipoViviendaPiso.click();
+		} else {
+			fail("el método setTipoVivienda no acepta el tipo de vivienda proporcionado, por favor implementelo");
+		}
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setEstadoVivienda(String estadoVivienda) throws Exception {
+		System.out.print("Introduciendo " + estadoVivienda + " en Estado Vivienda...");
+		WebElement listaEstadoVivienda = Browser.driver().findElement(map.getLocator("listaEstadoVivienda"));
+		listaEstadoVivienda.click();
+		Thread.sleep(500);
+		
+		if (estadoVivienda.equalsIgnoreCase("usada")) {
+			WebElement estadoViviendaUsada = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+				public WebElement apply(WebDriver d) {
+					try {
+						return d.findElement(map.getLocator("estadoViviendaUsada"));
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);",
+					estadoViviendaUsada);
+			Thread.sleep(500);
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", estadoViviendaUsada);
+			//estadoViviendaUsada.click();
+		} else {
+			fail("el método setEstadoVivienda no acepta el estado de vivienda proporcionado, por favor implementelo");
+		}
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setLocalidadVivienda(String localidad) throws Exception {
+		System.out.print("Introduciendo " + localidad + " en Localidad Vivienda...");
+		WebElement textfieldLocalidadVivienda = Browser.driver().findElement(map.getLocator("textfieldLocalidadVivienda"));
+		textfieldLocalidadVivienda.sendKeys(localidad);
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setProvinciaVivienda(String provincia) throws Exception {
+		System.out.print("Introduciendo " + provincia + " en Provincia Vivienda...");
+		WebElement listaProvinciaVivienda = Browser.driver().findElement(map.getLocator("listaProvinciaVivienda"));
+		listaProvinciaVivienda.click();
+		Thread.sleep(500);
+		
+		if (provincia.equalsIgnoreCase("madrid")) {
+			WebElement provinciaViviendaMadrid = (new WebDriverWait(Browser.driver(), 10)).until(new ExpectedCondition<WebElement>() {
+				public WebElement apply(WebDriver d) {
+					try {
+						return d.findElement(map.getLocator("provinciaViviendaMadrid"));
+					} catch (Exception e) {
+						e.printStackTrace();
+						return null;
+					}
+				}
+			});
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].scrollIntoView(true);",
+					provinciaViviendaMadrid);
+			Thread.sleep(500);
+			((JavascriptExecutor) Browser.driver()).executeScript("arguments[0].click();", provinciaViviendaMadrid);
+			//provinciaViviendaMadrid.click();
+		} else {
+			fail("el método setProvinciaVivienda no acepta la provincia proporcionada, por favor implementelo");
+		}
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setCodigoPostalVivienda(int cp) throws Exception {
+		System.out.print("Introduciendo " + cp + " en Código Postal...");
+		WebElement textfieldCodigoPostalVivienda = Browser.driver().findElement(map.getLocator("textfieldCodigoPostalVivienda"));
+		textfieldCodigoPostalVivienda.clear();
+		textfieldCodigoPostalVivienda.sendKeys(Integer.toString(cp));
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setMetrosConstruidos(int metros) throws Exception {
+		System.out.print("Introduciendo " + metros + " en Metros Construidos...");
+		WebElement textfieldMetrosConstruidos = Browser.driver().findElement(map.getLocator("textfieldMetrosConstruidos"));
+		textfieldMetrosConstruidos.sendKeys(Integer.toString(metros));
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setMesPrevistoFirma(int mes) throws Exception {
+		System.out.print("Introduciendo " + mes + " en Mes Previsto para Firma...");
+		WebElement textfieldMesPrevistoFirma = Browser.driver().findElement(map.getLocator("textfieldMesPrevistoFirma"));
+		textfieldMesPrevistoFirma.sendKeys(Integer.toString(mes));
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public void setAñoPrevistoFirma(int año) throws Exception {
+		System.out.print("Introduciendo " + año + " en Año Previsto para Firma...");
+		WebElement textfieldAñoPrevistoFirma = Browser.driver().findElement(map.getLocator("textfieldAñoPrevistoFirma"));
+		textfieldAñoPrevistoFirma.sendKeys(Integer.toString(año));
+		System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+	}
+	
+	public boolean verifyAnalizandoSolicitud() throws Exception {
+		System.out.print("Validamos el texto 'Analizando Solicitud'...");
+		WebElement tituloAnalizandoSolicitud = (new WebDriverWait(Browser.driver(), 15))
+				.until(new ExpectedCondition<WebElement>() {
+					public WebElement apply(WebDriver d) {
+						try {
+							//if (d.findElement(map.getLocator("tituloAnalizandoSolicitud")).getText()
+							//		.equals("Analizando solicitud…")) {
+								return d.findElement(map.getLocator("tituloAnalizandoSolicitud"));
+							//} else {
+							//	return null;
+							//}
+						} catch (Exception e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				});
+		if (tituloAnalizandoSolicitud.isDisplayed()) {
+			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+			return true;
+		} else {
+			System.out.println("\u001B[31m" + " ERROR" + "\u001B[0m");
+			return false;
+		}
+	}
+	
+	public String getMensajeSolicitudDenegada() throws Exception {
+		System.out.print("Devolviendo el mensaje de denegación...");
+		WebElement mensajeSolicitudNoViable = (new WebDriverWait(Browser.driver(), 15))
+				.until(new ExpectedCondition<WebElement>() {
+					public WebElement apply(WebDriver d) {
+						try {
+							if (d.findElement(map.getLocator("mensajeSolicitudNoViable")).isDisplayed()) {
+								return d.findElement(map.getLocator("mensajeSolicitudNoViable"));
+							}
+							else {
+								return null;
+							}
+						} catch (Exception e) {
+							e.printStackTrace();
+							return null;
+						}
+					}
+				});
+		
+			System.out.println("\u001B[32m" + " LISTO" + "\u001B[0m");
+			return mensajeSolicitudNoViable.getText();
+	}	
 }

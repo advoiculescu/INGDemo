@@ -55,10 +55,11 @@
 	Entonces se desplaza la pantalla hacia abajo mostrando los datos de la vivienda a hipotecar
 	
 	Dado se está en el paso 4 de 4
-	Y que se está en la pantalla de datos de la vivienda
-	Cuando se rellenar los datos de la vivienda
+	Y que se tienen en pantalla los datos de la vivienda a hipotecar
+	Cuando se rellenan los datos de la vivienda
+	Y se pulsa el botón de continuar tras introducir datos de la vivienda
 	Entonces se analiza la solicitud
-	Y se obtiene el mensaje de "La Solicitud de su Hipoteca NARANJA es en principio viable."
+	Y se obtiene el mensaje de "La Solicitud de su Hipoteca NARANJA no es en principio viable."
 	Y cerramos instancia de navegador
 	
 Ejemplos:
